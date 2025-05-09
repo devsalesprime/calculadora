@@ -1,0 +1,235 @@
+:root {
+  --primary-color: #0047ab; /* Azul corporativo principal */
+  --primary-dark: #003380; /* Tom mais escuro para hover/active */
+  --primary-light: #4d7cc3; /* Tom mais claro para destaques suaves */
+  --accent-color: #00a86b; /* Verde para destaques positivos, sucesso */
+  --warning-color: #ff5733; /* Laranja/Vermelho para alertas, desperdício */
+  --bs-card-title-color: #0047ab !important;
+  --bg-color: #f8f9fa; /* Fundo geral da página (Bootstrap default) */
+  --text-color: #212529; /* Cor de texto principal (Bootstrap default) */
+  --border-color: #dee2e6; /* Cor de borda (Bootstrap default) */
+  --card-bg: #ffffff; /* Fundo dos cards */
+  --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* Sombra padrão Bootstrap para cards */
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  background-image: linear-gradient(240deg, #0b1426 0%, #3d4f73 100%);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+header h1 {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+header .lead {
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+footer {
+  text-align: center;
+  padding: 20px 0 3px 0;
+  background-color: #f1f1f1;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.input-section,
+.results-section {
+  background-color: var(--card-bg);
+  border-radius: 0.375rem; /* Bootstrap's default border-radius */
+  padding: 2rem;
+  box-shadow: var(--shadow);
+}
+
+.input-section h2,
+.results-section h2 {
+  color: var(--primary-dark);
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.form-label {
+  font-weight: 500;
+  color: var(--primary-dark);
+}
+
+.form-control,
+.form-select {
+  border-color: var(--border-color);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 0.25rem rgba(0, 71, 171, 0.25); /* Foco com cor primária */
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  font-weight: 500;
+  padding: 0.75rem 1.25rem;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.conversion-stages h5 {
+  color: var(--primary-dark);
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.result-card .card-title {
+  color: var(--primary-dark);
+  font-weight: 500;
+}
+
+.result-highlight {
+  font-size: 1.75rem; /* Aumentado para destaque */
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 0.25rem;
+}
+
+.waste-highlight {
+  font-size: 1.75rem; /* Aumentado para destaque */
+  font-weight: 700;
+  color: var(--warning-color);
+  margin-bottom: 0.25rem;
+}
+
+.progress-container .progress-bar {
+  background-color: var(--primary-color);
+}
+
+.progress-container .bg-danger {
+  background-color: var(--warning-color) !important;
+}
+
+.stage-gap .card-title {
+  margin-bottom: 1rem;
+}
+
+.stage-gap-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.stage-gap-item:last-child {
+  border-bottom: none;
+}
+
+.stage-name {
+  font-weight: 500;
+}
+
+.worst-stage {
+  background-color: rgba(255, 87, 51, 0.05); /* Mais suave */
+  border-left: 4px solid var(--warning-color);
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 0.25rem;
+}
+
+.worst-stage p strong {
+  color: var(--warning-color);
+}
+
+.decision-cycle-section .card-title {
+  margin-bottom: 1rem;
+}
+
+.decision-cycle-section .result-card {
+  background-color: var(--bg-color); /* Fundo sutilmente diferente */
+  border: 1px solid var(--border-color);
+}
+
+.toggle-label {
+  cursor: pointer;
+}
+
+.error-message {
+  /* Bootstrap .invalid-feedback já lida com isso, mas podemos adicionar estilos se necessário */
+  color: var(--warning-color);
+  font-size: 0.875em;
+  display: none; /* Controlado por JS e classes Bootstrap 'is-invalid' */
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: var(--warning-color);
+}
+
+.form-control.is-invalid:focus,
+.form-select.is-invalid:focus {
+  box-shadow: 0 0 0 0.25rem rgba(255, 87, 51, 0.25);
+}
+
+/* Melhorias para o preenchimento guiado e UX */
+.input-section .form-group:not(:last-child) {
+  margin-bottom: 1.75rem; /* Maior espaçamento entre grupos de formulário */
+}
+
+/* Estilo para destacar a seção ativa ou o passo atual (se implementado com JS) */
+.step-active {
+  border-left: 4px solid var(--primary-color);
+  padding-left: 1rem;
+  background-color: #e9ecef; /* Um fundo levemente destacado */
+}
+
+/* Ajustes para responsividade, complementando Bootstrap */
+@media (max-width: 768px) {
+  .input-section,
+  .results-section {
+    padding: 1.5rem;
+  }
+  header h1 {
+    font-size: 1.75rem;
+  }
+  .result-highlight,
+  .waste-highlight {
+    font-size: 1.5rem;
+  }
+}
+#sale-type-description {
+  transition: all 0.3s ease;
+  border-left: 4px solid #0d6efd;
+}
+
+.no-print {
+  display: none !important;
+}
+/* Adicione ao final do arquivo CSS */
+#step-0 .form-control {
+  padding: 0.75rem 1rem;
+}
+
+#step-0 .form-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+#step-0 .invalid-feedback {
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+/* Adicione ao seu style.css */
+.client-info p {
+  margin-bottom: 0.5rem;
+}
+
+.client-info strong {
+  display: inline-block;
+  width: 80px;
+  color: var(--primary-dark);
+}

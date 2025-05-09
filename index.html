@@ -1,0 +1,424 @@
+<!--
+projeto-analise-conversao/
+│
+├── index.html              ← (Seu HTML principal)
+├── js/
+│   ├── benchmark.js        ← Dados setoriais e cálculos iniciais
+│   ├── validations.js      ← Validação de formulário e campos
+│   ├── calculations.js     ← Lógica de cálculo de conversão e resultados
+│   ├── pdf-generation.js   ← Geração de relatório PDF
+│   └── init.js             ← Inicialização do DOM e eventos principais
+│
+├── img/
+│   └── logo.png            ← Para marca d'água no PDF
+│
+└── README.md               ← Documentação do projeto
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SALES PRIME - Calculadora do Dinheiro na Mesa</title>
+    <meta name="description"
+        content="Sales Prime Impulsionamos empresas treinando seus times comerciais. Método PRIME®: validado em 7 países." />
+    <link rel="icon" href="https://lp.salesprime.com.br/wp-content/uploads/2024/08/cropped-Favicon-32px-32x32.png.webp"
+        sizes="32x32" />
+    <link rel="icon"
+        href="https://lp.salesprime.com.br/wp-content/uploads/2024/08/cropped-Favicon-32px-192x192.png.webp"
+        sizes="192x192" />
+    <link rel="apple-touch-icon"
+        href="https://lp.salesprime.com.br/wp-content/uploads/2024/08/cropped-Favicon-32px-180x180.png.webp" />
+    <meta name="msapplication-TileImage"
+        content="https://lp.salesprime.com.br/wp-content/uploads/2024/08/cropped-Favicon-32px-270x270.png" />
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="container mt-5 mb-5">
+        <header class="text-center mb-4">
+            <svg width="192" height="79" viewBox="0 0 192 79" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_165_385)">
+                    <path
+                        d="M85.6716 46.5908C90.0753 46.5908 92.4566 48.6978 92.4566 51.6874C92.4566 52.1479 92.4013 52.7043 92.249 53.176C92.0955 53.6489 91.9126 54.1037 91.6113 54.6431C91.1678 55.4365 90.4162 56.3157 89.818 56.8292C88.3847 58.0593 86.6174 59.2229 86.6174 59.2229L79.5774 64.0058V70.5865C79.5774 71.8572 80.6066 72.8865 81.8774 72.8865V73.4237H71.2587V72.8865C72.5294 72.8865 73.5587 71.8572 73.5587 70.5865V49.4269C73.5587 48.1606 72.5294 47.1269 71.2587 47.1269V46.5897H85.6716V46.5908ZM81.3007 60.7363C83.1911 59.3312 84.4223 57.9126 85.2789 56.6102C86.1344 55.3067 86.6253 53.4514 86.6253 51.6885C86.6253 49.7406 84.9595 48.1618 83.0985 48.1618C81.2375 48.1618 79.5762 49.7406 79.5762 51.6885V62.0398L81.3018 60.7363H81.3007Z"
+                        fill="#E9EBF4"></path>
+                    <path
+                        d="M113.309 64.4166C113.411 64.7236 114.925 69.6859 115.203 70.4059C115.481 71.126 115.811 71.8449 116.246 72.2534C116.68 72.6631 117.217 72.8888 117.831 72.8888V73.426H109.781C108.426 68.6984 107.391 65.4278 106.677 63.6131C106.089 62.0793 105.13 61.7092 103.802 62.5014L101.387 63.92V70.5899C101.387 71.8607 102.416 72.8899 103.687 72.8899V73.4271H92.9927V72.8899C94.2634 72.8899 95.2927 71.8607 95.2927 70.5899V49.4303C95.2927 48.164 94.2634 47.1303 92.9927 47.1303V46.5931H107.406C111.964 46.5931 114.191 48.8818 114.191 51.6897C114.191 52.6614 113.973 53.3972 113.539 54.2787C113.105 55.1601 112.479 55.9783 111.662 56.7322C110.843 57.486 110.019 58.144 109.189 58.706C108.358 59.2681 107.381 59.8696 106.257 60.5072C108.147 59.715 109.604 59.601 110.627 60.1619C111.648 60.7239 112.543 62.1425 113.31 64.4166H113.309ZM103.036 61.0817C106.508 58.9882 108.441 55.2108 108.441 51.6886C108.441 49.7407 106.862 48.1618 104.914 48.1618C102.966 48.1618 101.387 49.7407 101.387 51.6886V62.0398L103.036 61.0817Z"
+                        fill="#E9EBF4"></path>
+                    <path
+                        d="M118.37 47.128V46.5908H128.988V47.128C127.718 47.128 126.688 48.1618 126.688 49.4281V70.5876C126.688 71.8584 127.718 72.8877 128.988 72.8877V73.4249H118.37V72.8877C119.641 72.8877 120.67 71.8584 120.67 70.5876V49.4281C120.67 48.1618 119.641 47.128 118.37 47.128Z"
+                        fill="#E9EBF4"></path>
+                    <path
+                        d="M145.929 63.9178L152.484 46.5908H160.688V47.128C159.417 47.128 158.388 48.1618 158.388 49.4281V70.5876C158.388 71.8584 159.417 72.8877 160.688 72.8877V73.4249H150.107V72.8877C151.378 72.8877 152.407 71.8584 152.407 70.5876V50.9223L144.204 73.4237H143.092L134.506 50.9223L134.544 70.5876C134.544 71.8584 135.574 72.8877 136.844 72.8877V73.4249H130.558V72.8877C131.829 72.8877 132.858 71.8584 132.858 70.5876V49.4281C132.858 48.1618 131.829 47.128 130.558 47.128V46.5908H139.298L145.929 63.9178Z"
+                        fill="#E9EBF4"></path>
+                    <path
+                        d="M183.686 65.5519V73.4237H162.258V72.8865C163.528 72.8865 164.558 71.8572 164.558 70.5865V49.4269C164.558 48.1606 163.528 47.1269 162.258 47.1269V46.5897H183.686V54.4671H183.149C183.149 50.9843 180.325 48.1595 176.843 48.1595H172.838C171.568 48.1595 170.538 49.191 170.538 50.4618V59.1721H171.603C174.201 59.1721 176.307 57.0188 176.307 54.4682H176.844V65.5519H176.307C176.307 62.9483 174.201 60.8424 171.603 60.8424H170.538V69.5572C170.538 70.828 171.567 71.8573 172.838 71.8573H176.843C180.326 71.8573 183.149 69.0336 183.149 65.5519H183.686Z"
+                        fill="#E9EBF4"></path>
+                    <path
+                        d="M79.9238 13.9604C83.9382 13.9604 87.9514 14.9016 88.993 15.2989L88.2493 19.2636C86.8612 18.8674 83.7395 18.5198 81.0637 18.5198C77.248 18.5198 76.5043 19.3132 76.5043 21.146C76.5043 23.1278 77.8924 23.7722 81.7578 25.0114C88.5969 27.2414 89.9839 29.0257 89.9839 32.7918C89.9839 38.3917 86.912 40.3735 80.7172 40.3735C76.7526 40.3735 73.0362 39.5801 71.4505 39.0847L72.1446 35.0207C74.2257 35.3672 77.0008 35.8141 80.1236 35.8141C83.989 35.8141 84.8817 35.2193 84.8817 32.8403C84.8817 31.2546 83.9901 30.6102 79.1327 28.8756C72.8883 26.6456 71.4517 25.1592 71.4517 21.2442C71.4517 16.0404 74.0293 13.9593 79.9261 13.9593L79.9238 13.9604Z"
+                        fill="#E9EBF4"></path>
+                    <path
+                        d="M104.602 24.1683H111.292V23.3264C111.292 20.4023 109.954 18.7173 105.593 18.7173C102.372 18.7173 97.9121 19.2128 97.9121 19.2128L97.0702 15.1984C97.0702 15.1984 101.431 14.1579 105.941 14.1579C113.424 14.1579 116.496 17.6271 116.496 22.9292V39.6298H112.532L111.441 36.8546C109.707 38.2913 106.783 40.1252 103.315 40.1252C98.7055 40.1252 95.5839 37.0036 95.5839 32.1959C95.5839 27.3881 98.7552 24.1672 104.603 24.1672L104.602 24.1683ZM111.292 28.0337H105.296C102.026 28.0337 100.737 29.5697 100.737 31.9487C100.737 34.3277 102.174 35.5669 104.751 35.5669C107.13 35.5669 109.608 34.5264 111.292 33.3368V28.0348V28.0337Z"
+                        fill="#E9EBF4"></path>
+                    <path
+                        d="M133.048 39.6309C131.958 39.7799 131.017 39.8792 130.124 39.8792C125.813 39.8792 124.078 37.946 124.078 33.4373V3.70172H129.232V32.8911C129.232 34.725 129.877 35.5173 131.611 35.5173C132.007 35.5173 132.504 35.4676 133.048 35.3683V39.6298V39.6309Z"
+                        fill="#E9EBF4"></path>
+                    <path
+                        d="M158.52 38.0453C158.52 38.0453 155.943 40.176 150.244 40.176C141.919 40.176 138.648 35.9145 138.648 27.3904C138.648 18.8663 142.167 14.1591 149.303 14.1591C157.877 14.1591 160.453 20.8989 158.967 29.125H143.852C144.198 33.8334 145.883 35.5669 150.79 35.5669C154.854 35.5669 157.134 34.2781 157.134 34.2781L158.521 38.0441L158.52 38.0453ZM154.456 25.3082C154.605 21.4925 153.465 18.5684 149.351 18.5684C145.932 18.5684 144.197 20.5998 143.851 25.3082H154.456Z"
+                        fill="#E9EBF4"></path>
+                    <path
+                        d="M173.435 13.9604C177.449 13.9604 181.463 14.9016 182.504 15.2989L181.76 19.2636C180.372 18.8674 177.251 18.5198 174.575 18.5198C170.759 18.5198 170.015 19.3132 170.015 21.146C170.015 23.1278 171.404 23.7722 175.269 25.0114C182.108 27.2414 183.495 29.0257 183.495 32.7918C183.495 38.3917 180.423 40.3735 174.228 40.3735C170.264 40.3735 166.547 39.5801 164.962 39.0847L165.656 35.0207C167.737 35.3672 170.512 35.8141 173.635 35.8141C177.5 35.8141 178.393 35.2193 178.393 32.8403C178.393 31.2546 177.501 30.6102 172.644 28.8756C166.399 26.6456 164.963 25.1592 164.963 21.2442C164.963 16.0404 167.54 13.9593 173.437 13.9593L173.435 13.9604Z"
+                        fill="#E9EBF4"></path>
+                    <path
+                        d="M58.2079 25.675C66.1079 33.575 66.1079 45.425 58.2079 53.325C51.7885 59.7443 32.5329 79 32.5329 79C32.5329 79 25.5064 71.9735 19.736 66.2031C19.7134 66.1805 19.7134 66.1455 19.736 66.123L19.7766 66.0823C23.9512 69.0967 30.8885 68.7943 34.5079 65.175L52.2829 47.4C59.0159 40.6669 59.8127 30.2468 54.6709 22.6436C55.8875 23.5183 57.068 24.534 58.2079 25.6738V25.675Z"
+                        fill="#F2A011"></path>
+                    <path
+                        d="M32.5329 0C32.5329 0 39.5594 7.02649 45.3297 12.7969C45.3512 12.8183 45.3523 12.8544 45.3297 12.877L45.2891 12.9176C41.1145 9.90322 34.1772 10.2057 30.5579 13.825L12.7829 31.6C7.84423 36.5386 4.88286 43.45 10.8079 49.3761C16.7329 55.3011 23.6341 52.3273 28.5716 47.3887C31.5465 44.4138 33.0486 42.9286 34.5406 41.4423C42.4891 33.5242 48.3329 39.5 48.3329 39.5L34.5079 53.325C24.6329 63.2 14.7579 61.2261 6.85786 53.325C-1.04214 45.425 -1.04214 33.5739 6.85786 25.6739C13.2772 19.2568 32.5329 0 32.5329 0Z"
+                        fill="#F2A011"></path>
+                    <path
+                        d="M16.7328 39.5C16.7328 39.5 27.1022 29.1307 30.5578 25.675C31.6447 24.5882 36.0709 20.04 41.6867 20.04C48.4118 20.04 52.2682 24.9933 53.3877 28.8248C47.667 23.9946 41.1924 26.9142 36.4941 31.6124C30.8355 37.2711 30.3039 37.7778 30.1222 37.9493C22.3802 45.2749 16.7328 39.5 16.7328 39.5Z"
+                        fill="#F2A011"></path>
+                    <path
+                        d="M190.721 46.9373C191.122 47.1675 191.435 47.4858 191.661 47.8898C191.887 48.295 192.001 48.7498 192.001 49.2542C192.001 49.7587 191.888 50.2158 191.661 50.6255C191.435 51.034 191.122 51.3545 190.721 51.5847C190.321 51.815 189.868 51.9312 189.364 51.9312C188.859 51.9312 188.393 51.8161 187.992 51.5847C187.592 51.3545 187.279 51.034 187.052 50.6255C186.826 50.2169 186.713 49.7598 186.713 49.2542C186.713 48.7486 186.826 48.295 187.052 47.8898C187.278 47.4846 187.592 47.1675 187.992 46.9373C188.393 46.7071 188.849 46.5908 189.364 46.5908C189.878 46.5908 190.321 46.7059 190.721 46.9373ZM190.884 50.8072C191.271 50.4077 191.465 49.8896 191.465 49.2542C191.465 48.6189 191.271 48.1009 190.884 47.7013C190.497 47.3007 189.99 47.1009 189.363 47.1009C188.735 47.1009 188.22 47.3007 187.841 47.7013C187.463 48.102 187.274 48.62 187.274 49.2542C187.274 49.8885 187.463 50.4077 187.841 50.8072C188.219 51.2078 188.727 51.4076 189.363 51.4076C189.998 51.4076 190.496 51.2078 190.884 50.8072ZM190.375 49.2351C190.267 49.3784 190.115 49.4811 189.925 49.542L190.656 50.6255L189.833 50.639L189.207 49.5951H188.984V50.639H188.306V47.8322H189.559C189.855 47.8322 190.092 47.9101 190.27 48.067C190.448 48.2239 190.537 48.4372 190.537 48.7069C190.537 48.9157 190.483 49.0917 190.374 49.2362L190.375 49.2351ZM188.984 49.0319H189.519C189.615 49.0319 189.695 49.006 189.761 48.954C189.826 48.9021 189.859 48.8276 189.859 48.7317C189.859 48.6358 189.826 48.5647 189.761 48.5162C189.695 48.4688 189.615 48.4439 189.519 48.4439H188.984V49.0319Z"
+                        fill="#E9EBF4"></path>
+                </g>
+                <defs>
+                    <clipPath id="clip0_165_385">
+                        <rect width="191.067" height="79" fill="white" transform="translate(0.932861)"></rect>
+                    </clipPath>
+                </defs>
+            </svg>
+            <h1 class="text-light mt-5">Calculadora do Dinheiro na Mesa</h1>
+            <p class="text-light" class="lead">Descubra quanto sua empresa está deixando de faturar por ter um processo comercial com baixa performance.</p>
+        </header>
+
+        <div class="row calculator-wrapper gx-lg-5">
+            <section class="col-lg-7 input-section mb-4 mb-lg-0">
+                <h2 class="mb-4">Dados da Empresa</h2>
+                <form id="calculator-form">
+                    <!-- Nova Step 0: Informações de Contato -->
+                    <div class="form-step step-active p-3" id="step-0">
+                        <h3 class="step-title mb-3">Informações de Contato</h3>
+                        <div class="form-group mb-3">
+                            <label for="company-name" class="form-label">Nome da Empresa</label>
+                            <input type="text" id="company-name" class="form-control"
+                                placeholder="Ex: Minha Empresa Ltda" required>
+                            <div class="invalid-feedback" id="company-name-error">Por favor, insira o nome da empresa.
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="contact-name" class="form-label">Seu Nome</label>
+                            <input type="text" id="contact-name" class="form-control" placeholder="Ex: João Silva"
+                                required>
+                            <div class="invalid-feedback" id="contact-name-error">Por favor, insira seu nome.</div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="email" class="form-label">E-mail</label>
+                            <input type="email" id="email" class="form-control" placeholder="Ex: contato@empresa.com"
+                                required>
+                            <div class="invalid-feedback" id="email-error">Por favor, insira um e-mail válido.</div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="whatsapp" class="form-label">WhatsApp (com DDD)</label>
+                            <input type="tel" id="whatsapp" class="form-control" placeholder="Ex: 11987654321" required>
+                            <div class="invalid-feedback" id="whatsapp-error">Por favor, insira um número de WhatsApp
+                                válido.</div>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="button" class="btn btn-primary next-step">Próximo</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Dados Iniciais (antiga primeira etapa) -->
+                    <div class="form-step p-3" id="step-1" style="display: none;">
+                        <h3 class="step-title mb-3">Passo 1: Informações Gerais</h3>
+                        <div class="form-group mb-3">
+                            <label for="sector" class="form-label">Setor de Atuação</label>
+                            <select id="sector" class="form-select" required>
+                                <option value="" disabled selected>Selecione o setor</option>
+                                <option value="Saúde">Saúde</option>
+                                <option value="SaaS">SaaS</option>
+                                <option value="E-commerce">E-commerce</option>
+                                <option value="Indústria">Indústria</option>
+                                <option value="Serviços B2B">Serviços B2B</option>
+                                <option value="Educação">Educação</option>
+                                <option value="Consultoria">Consultoria</option>
+                            </select>
+                            <div class="invalid-feedback" id="sector-error">Por favor, selecione um setor de atuação.
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="traffic" class="form-label">Volume de Tráfego/Prospecção Mensal</label>
+                            <input type="number" id="traffic" class="form-control" placeholder="Ex: 10000" min="1"
+                                required>
+                            <div class="invalid-feedback" id="traffic-error">Por favor, insira um valor positivo.</div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="ticket" class="form-label">Ticket Médio (R$)</label>
+                            <input type="number" id="ticket" class="form-control" placeholder="Ex: 500" min="1"
+                                required>
+                            <div class="invalid-feedback" id="ticket-error">Por favor, insira um valor positivo.</div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-outline-secondary prev-step">Anterior</button>
+                            <button type="button" class="btn btn-primary next-step">Próximo</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Taxas de Conversão -->
+                    <div class="form-step p-3" id="step-2" style="display: none;">
+                        <h3 class="step-title mb-3">Passo 2: Taxas de Conversão</h3>
+                        <div class="form-group mb-3">
+                            <label for="conversion-type" class="form-label">Como você mede sua conversão?</label>
+                            <select id="conversion-type" class="form-select">
+                                <option value="total">Informar Taxa de Conversão Total</option>
+                                <option value="stages">Informar Taxas por Etapa do Funil</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3" id="total-conversion-group">
+                            <label for="conversion-rate" class="form-label">Taxa de Conversão Atual Total (%)</label>
+                            <input type="number" id="conversion-rate" class="form-control" placeholder="Ex: 2.5" min="0"
+                                max="100" step="0.01">
+                            <div class="invalid-feedback" id="conversion-rate-error">Por favor, insira um valor entre 0
+                                e 100.</div>
+                        </div>
+
+                        <div class="conversion-stages mb-3" id="stages-inputs" style="display: none;">
+                            <p class="form-text mb-2">Preencha as taxas de conversão (%) de uma etapa para a seguinte.
+                                Deixe em branco as etapas que não se aplicam.</p>
+                            <div class="stage-inputs row g-3">
+                                <div class="form-group col-md-6">
+                                    <label for="lead-to-mql" class="form-label">Lead para MQL</label>
+                                    <input type="number" id="lead-to-mql" class="form-control" placeholder="Ex: 10"
+                                        min="0" max="100" step="0.01">
+                                    <div class="invalid-feedback" id="lead-to-mql-error">Valor entre 0 e 100.</div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="mql-to-sql" class="form-label">MQL para SQL</label>
+                                    <input type="number" id="mql-to-sql" class="form-control" placeholder="Ex: 15"
+                                        min="0" max="100" step="0.01">
+                                    <div class="invalid-feedback" id="mql-to-sql-error">Valor entre 0 e 100.</div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="sql-to-opportunity" class="form-label">SQL para Oportunidade</label>
+                                    <input type="number" id="sql-to-opportunity" class="form-control"
+                                        placeholder="Ex: 20" min="0" max="100" step="0.01">
+                                    <div class="invalid-feedback" id="sql-to-opportunity-error">Valor entre 0 e 100.
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="opportunity-to-client" class="form-label">Oportunidade para
+                                        Cliente</label>
+                                    <input type="number" id="opportunity-to-client" class="form-control"
+                                        placeholder="Ex: 30" min="0" max="100" step="0.01">
+                                    <div class="invalid-feedback" id="opportunity-to-client-error">Valor entre 0 e 100.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-outline-secondary prev-step">Anterior</button>
+                            <button type="button" class="btn btn-primary next-step">Próximo</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Ciclo de Decisão (Opcional) -->
+                    <div class="form-step p-3" id="step-3" style="display: none;">
+                        <h3 class="step-title mb-3">Passo 3: Ciclo de Decisão (Opcional)</h3>
+                        <div class="form-check toggle-section mb-3">
+                            <input type="checkbox" id="include-decision-cycle" class="form-check-input">
+                            <label for="include-decision-cycle" class="form-check-label toggle-label">Desejo incluir a
+                                análise do Ciclo de Decisão de Compra.</label>
+                        </div>
+
+                        <div id="decision-cycle-fields" style="display:none;">
+                            <div class="form-group mb-3" id="decision-cycle-group-sale-type">
+                                <div class="mb-3">
+                                    <label for="sale-type" class="form-label">Tipo de Venda</label>
+                                    <select id="sale-type" class="form-select">
+                                        <option value="transacional">Vendas transacionais B2B</option>
+                                        <option value="consultivo_medio_valor">Vendas consultivas de médio valor
+                                        </option>
+                                        <option value="consultivo_alto_valor">Vendas consultivas de alto valor</option>
+                                        <option value="enterprise">Vendas enterprise</option>
+                                    </select>
+                                    <div id="sale-type-description" class="form-text mt-2 p-2 bg-light rounded">
+                                        <!-- As descrições serão inseridas aqui dinamicamente -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mt-3" id="decision-cycle-group-current-cycle">
+                                <label for="current-cycle" class="form-label">Ciclo de Decisão Atual (em dias)</label>
+                                <input type="number" id="current-cycle" class="form-control" placeholder="Ex: 4"
+                                    min="0.1" step="0.1">
+                                <div class="invalid-feedback" id="current-cycle-error">Por favor, insira um valor
+                                    positivo.</div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-outline-secondary prev-step">Anterior</button>
+                            <button type="submit" id="calculate-btn" class="btn btn-success">Calcular
+                                Resultados</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+            <section class="col-lg-5 results-section" id="results" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">Resultados da Análise</h2>
+                    <button type="button" id="download-pdf-btn" class="btn btn-outline-primary btn-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-download me-1" viewBox="0 0 16 16">
+                            <path
+                                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                            <path
+                                d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+                        </svg>
+                        Baixar PDF
+                    </button>
+                </div>
+                <!-- Novo card para informações de contato -->
+                <div class="result-card card mb-3">
+                    <div class="card-body">
+                        <h3 class="card-title h5">Informações do Cliente</h3>
+                        <div class="client-info">
+                            <p><strong>Empresa:</strong> <span id="result-company-name"></span></p>
+                            <p><strong>Contato:</strong> <span id="result-contact-name"></span></p>
+                            <p><strong>E-mail:</strong> <span id="result-email"></span></p>
+                            <p><strong>WhatsApp:</strong> <span id="result-whatsapp"></span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-card card mb-3" id="pdf-content-main">
+                    <div class="card-body">
+                        <h3 class="card-title h5">Receita Atual vs. Potencial</h3>
+                        <p class="card-text small">Com base nos benchmarks do setor, veja como está sua Receita Atual vs. Potencial:</p>
+                        <div class="mb-2">
+                            <span class="text-muted small d-block">Receita atual mensal</span>
+                            <div class="result-highlight" id="current-revenue">R$ 0,00</div>
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-muted small d-block">Receita potencial mensal (benchmark)</span>
+                            <div class="result-highlight" id="potential-revenue">R$ 0,00</div>
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-muted small d-block">Dinheiro deixado na mesa mensalmente</span>
+                            <div class="waste-highlight" id="wasted-revenue">R$ 0,00</div>
+                        </div>
+
+                        <div class="progress-container progress mt-3" style="height: 20px;">
+                            <div class="progress-bar" id="revenue-progress" role="progressbar" style="width: 0%;"
+                                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1 small">
+                            <span>Atual</span>
+                            <span>Potencial</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-card card mb-3" id="pdf-content-conversion">
+                    <div class="card-body">
+                        <h3 class="card-title h5">Taxas de Conversão</h3>
+                        <div class="row mb-2 text-center">
+                            <div class="col-6">
+                                <span class="text-muted small d-block">Taxa de conversão atual</span>
+                                <div class="result-highlight" id="current-conversion-display">0%</div>
+                            </div>
+                            <div class="col-6">
+                                <span class="text-muted small d-block">Benchmark do setor</span>
+                                <div class="result-highlight" id="benchmark-conversion-display">0%</div>
+                                <p class="text-muted small" id="benchmark-source-text" style="display: none;"></p>
+                            </div>
+                        </div>
+                        <div class="progress-container progress mb-2" style="height: 20px;">
+                            <div class="progress-bar" id="conversion-progress" role="progressbar" style="width: 0%;"
+                                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <p class="text-center small">Sua taxa de conversão está <span id="conversion-gap">0%</span>
+                            <span id="conversion-comparison">abaixo</span> do benchmark.</p>
+                    </div>
+                </div>
+
+                <div class="result-card card mb-3" id="pdf-content-waste">
+                    <div class="card-body">
+                        <h3 class="card-title h5">Análise de Desperdício</h3>
+                        <p class="small">Sua empresa está capturando apenas <strong id="capture-percentage">0%</strong>
+                            da receita potencial.</p>
+                        <p class="small">Isso representa um desperdício de <strong id="waste-percentage">0%</strong> do
+                            potencial de receita.</p>
+
+                        <div class="progress-container progress mt-3" style="height: 20px;">
+                            <div class="progress-bar bg-danger" id="waste-progress" role="progressbar"
+                                style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1 small">
+                            <span>0% Capturado</span>
+                            <span>100% Desperdiçado</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stage-gap card mb-3" id="stage-analysis" style="display: none;">
+                    <div class="card-body" id="pdf-content-stage-analysis">
+                        <h3 class="card-title h5">Análise por Etapa do Funil</h3>
+                        <p class="small">Comparação entre suas taxas de conversão e os benchmarks do setor:</p>
+                        <div id="stage-gap-list" class="small">
+                            <!-- Preenchido via JavaScript -->
+                        </div>
+                        <div class="worst-stage mt-3 alert alert-warning small" id="worst-stage-info">
+                            <!-- Preenchido via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="decision-cycle-section card" id="decision-cycle-results" style="display: none;">
+                    <div class="card-body" id="pdf-content-decision-cycle">
+                        <h3 class="card-title h5">Análise do Ciclo de Decisão</h3>
+                        <p>Comparação entre seu ciclo de decisão atual e o benchmark do setor:</p>
+                        <div class="result-card p-2">
+                            <p class="small">Seu ciclo de decisão de compra (<span id="sale-type-display"></span>) é de
+                                <strong id="current-cycle-value">0</strong> dias.</p>
+                            <p class="small">O benchmark para este tipo de venda no seu setor é de <strong
+                                    id="benchmark-cycle-range">0-0</strong>.</p>
+                            <p class="small" id="cycle-comparison-text"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </div>
+    <footer class="text-center mt-5 pt-4 border-top">
+        <p class="small text-muted">&copy; SALES PRIME <span id="current-year"></span> - Calculadora Dinheiro na Mesa.
+            Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- Bootstrap JS Bundle (Popper.js included) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap @5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js "></script>
+
+    <script type="module" src="js/script.js"></script>
+</body>
+
+</html>
